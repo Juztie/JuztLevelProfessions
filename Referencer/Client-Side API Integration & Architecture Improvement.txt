@@ -1,0 +1,305 @@
+# JuztLevel – Professions: Client-Side API Integration & Architecture Improvement
+
+## Formål og baggrund
+
+Jeg har fundet yderligere dokumentation for de native client-side Lua API'er, som World of Warcraft: Forever stiller til rådighed for addons.
+
+Jeg ønsker, at disse API'er undersøges grundigt og anvendes som det primære grundlag for at identificere og verificere spillerens aktuelle professionsdata, frem for at JuztLevel i unødvendigt omfang afhænger af statiske professionsdatabaser, historiske build-exports, manuelt vedligeholdte opskrifter og estimerede oplysninger.
+
+**Målet er en klientbaseret, dynamisk og evidensstyret professionsaddon, hvor spillets egne verificerede oplysninger er den primære autoritet for den aktuelle karaktertilstand.**
+
+Dette betyder ikke, at alle eksisterende databaser og funktioner skal slettes eller erstattes. De skal fortsat anvendes til information, som klientens API'er ikke eksponerer, eksempelvis fremtidige opskrifter, alternative leveling-ruter, NPC-lokationer, transport, anskaffelsesmetoder og historisk referenceinformation.
+
+Den korrekte løsning skal derfor kombinere:
+
+- **Native Client-Side API:** Aktuelle, verificerede oplysninger fra spillerens egen klient.
+- **Source-Qualified Reference Data:** Dokumenterede opskrifter, skillkrav, anskaffelseskilder og ruteinformation.
+- **Dynamic Planning & Reconciliation:** Kontinuerlig planlægning og afstemning på baggrund af observerede ændringer i karakterens tilstand.
+
+## 1. Primære API-kilder
+
+**Komplet Forever API-dokumentationsmappe:**
+
+https://github.com/Gethe/wow-ui-source/tree/forever/Interface/AddOns/Blizzard_APIDocumentationGenerated
+
+**Dokumentation for professions-API-funktioner:**
+
+https://github.com/Gethe/wow-ui-source/blob/forever/Interface/AddOns/Blizzard_APIDocumentationGenerated/TradeSkillUIDocumentation.lua
+
+**Dokumentation for professionsrelaterede enums og datastrukturer:**
+
+https://github.com/Gethe/wow-ui-source/blob/forever/Interface/AddOns/Blizzard_APIDocumentationGenerated/TradeSkillUITypesDocumentation.lua
+
+**Blizzards egen implementering af professionsvinduet:**
+
+https://github.com/Gethe/wow-ui-source/blob/forever/Interface/AddOns/Blizzard_Professions/Blizzard_ProfessionsFrame.lua
+
+**Supplerende generel API-reference:**
+
+https://worldofwarcraft.fandom.com/et/wiki/World_of_Warcraft_API
+
+Den Forever-specifikke kildekode skal prioriteres frem for generelle Retail-, Classic- og historiske API-oplysninger.
+
+GitHub-branchens indhold skal versionsfastlåses med commit-identitet og sammenholdes med den faktiske Forever-klientbuild. Dokumentation i et repository er ikke i sig selv bevis for, at en funktion virker i den konkrete klientinstallation.
+
+## 2. Hvorfor native Client-Side API'er er en bedre datakilde
+
+JuztLevel anvender i den nuværende arkitektur omfattende professionsreferencer fra blandt andet build 70374 og 70450, manuelt kvalificerede recipes, faste difficulty-intervaller og historiske oplysninger.
+
+Disse oplysninger er nyttige til planlægning, men kan ikke alene bevise:
+
+- Hvilke professioner karakteren aktuelt har lært.
+- Hvilke opskrifter karakteren faktisk kender.
+- Den aktuelle skill, skill cap og recipe difficulty.
+- Hvilke materialer den åbne opskrift kræver.
+- Hvilke opskrifter klienten aktuelt tillader at fremstille.
+- Hvilke handlinger der faktisk lykkedes, og hvor mange genstande der blev produceret.
+
+En statisk database beskriver, hvordan professionerne forventes at fungere. En verificeret native API-observation kan derimod beskrive, hvordan den aktuelle karakter og den aktuelle klient faktisk fungerer.
+
+Dette er afgørende for en dynamisk professionsplanner, der skal kunne reagere korrekt på nye opskrifter, skill-ups, ændret lagerbeholdning, afbrudt crafting, professionsskift og `/reload`.
+
+Fordelene omfatter mere præcis learned-state, færre forældede oplysninger, mindre afhængighed af manuel datavedligeholdelse og bedre sammenhæng mellem Current Step, materialeberegning og faktisk udførelse.
+
+Native API'er løser dog ikke automatisk det komplette 1–300-datakatalog. Aktuelle difficulty-farver afslører eksempelvis ikke nødvendigvis samtlige fremtidige farvegrænser, og en åbnet profession afslører ikke nødvendigvis alle spillets ulærte opskrifter.
+
+## 3. Konkrete API'er, som skal undersøges og prioriteres
+
+| API / datatype | Anvendelse i JuztLevel |
+|---|---|
+| `GetProfessions()` og `GetProfessionInfo(index)` | Identifikation af lærte professioner, skill og skill cap, hvor de er understøttede |
+| `C_TradeSkillUI.GetBaseProfessionInfo()` | Identifikation af den aktuelt viste professions grunddata |
+| `C_TradeSkillUI.GetChildProfessionInfo()` | Identifikation af aktiv professionsvariant og relevant skill-kontekst |
+| `C_TradeSkillUI.GetProfessionInfoBySkillLineID()` | Supplerende opslag af professionsdata via stabil SkillLineID |
+| `C_TradeSkillUI.IsTradeSkillLinked()` | Undgå at forveksle andre spilleres professionsvinduer med karakterens egne |
+| `C_TradeSkillUI.GetAllRecipeIDs()` | Indsamling af opskriftsidentiteter fra den aktuelle professionskontekst, hvis runtime understøtter funktionen |
+| `C_TradeSkillUI.GetRecipeInfo(recipeID)` | Aktuel learned-state, difficulty, skill-up-status og recipe-egenskaber |
+| `C_TradeSkillUI.GetRecipeSchematic(recipeID, false)` | Reagents, antal, alternative reagent-slots, output-ID og forventet outputinterval |
+| `C_TradeSkillUI.GetRecipeRequirements(recipeID)` | Supplerende kontrol af opskriftens aktuelle krav |
+| `C_TradeSkillUI.GetCraftableCount(recipeID)` | Native observation af aktuelt craftable antal i den relevante kontekst |
+| `C_TradeSkillUI.GetCraftingOperationInfo()` | Crafting-operationens beregnede egenskaber, når systemet er relevant og understøttet |
+| `C_TradeSkillUI.CraftRecipe()` / `CraftEnchant()` | Brugerautoriseret crafting gennem klientens native funktioner |
+| `C_Container.GetContainerItemInfo()` | Observeret bagindhold via ItemID og stackCount |
+| `C_Item.GetItemCount()` / `GetItemCount()` | Materialetælling, hvor den præcise signatur og banksemantik er verificeret |
+
+Flere af disse funktioner anvendes allerede delvist i addonen. Det eksisterende arbejde skal derfor konsolideres og forbedres, ikke implementeres parallelt i endnu et uafhængigt API-system.
+
+### Vigtige forskelle mellem funktioner og datatyper
+
+`TradeskillRelativeDifficulty`, `TradeskillRecipeType`, `TradeskillSlotDataType`, `CraftingItemResultData` og `CraftingOperationInfo` er enums eller datastrukturer – ikke selvstændige Lua-funktioner.
+
+De anvendes til at fortolke data returneret fra API-funktioner eller modtaget gennem klient-events.
+
+Eksempelvis beskriver `TradeskillRelativeDifficulty` følgende værdier:
+
+| Værdi | Enum | Leveling-farve |
+|---|---|---|
+| 0 | Optimal | Orange |
+| 1 | Medium | Gul |
+| 2 | Easy | Grøn |
+| 3 | Trivial | Grå |
+
+Disse aktuelle farveoplysninger er langt mere pålidelige for den åbne opskrift end en upræcis historisk difficulty-estimering.
+
+De er dog ikke et bevis for eksakte fremtidige orange/yellow/green/gray-grænser eller for en bestemt skill-up-sandsynlighed.
+
+`TradeskillRecipeType` skal anvendes til at skelne mellem eksempelvis normal Item crafting, Enchanting, Salvage og Gathering.
+
+`TradeskillSlotDataType` skal anvendes til at skelne mellem almindelige reagents, modified reagents og currency-baserede slots. JuztLevel må ikke antage, at alle reagent-slots altid indeholder præcis ét obligatorisk ItemID.
+
+`CraftingOperationInfo` skal kun anvendes til de crafting-systemer, hvor klienten faktisk returnerer meningsfulde operation-data. Moderne crafting-quality-beregninger må ikke automatisk oversættes til Forever-professionernes klassiske 1–300-skillprogression.
+
+## 4. Foreslået API-first arkitektur
+
+Jeg ønsker én central **Forever Client API Compatibility & Evidence Layer**, der fungerer som et standardiseret forbindelseslag mellem Blizzard API'erne og resten af JuztLevel.
+
+Denne arkitektur skal bygges oven på de eksisterende moduler, herunder:
+
+`ProfessionAPI.lua`, `ProfessionNativeCapabilityMatrix.lua`, `ClientRecipeEvidence.lua`, `RecipeDifficulty.lua`, `Inventory.lua`, `Crafting.lua`, `CraftEventCorrelation.lua`, `CraftOutputReconciliation.lua`, `TransactionLedger.lua` og `TransactionRecovery.lua`.
+
+### Feltspecifik og buildbevidst kompatibilitet
+
+For hver relevant API-funktion og hvert nødvendigt returfelt skal der dokumenteres:
+
+- Om funktionen eksisterer på den aktuelle klientbuild.
+- Den faktiske signatur, argumenter og returtyper.
+- Om nødvendige returfelter findes og er gyldige.
+- Krævet TradeSkill-vindue, professionskontekst og datakildetilstand.
+- Om observationen vedrører spillerens egen profession, en linked profession eller NPC-kontekst.
+- Secure-, taint-, combat- og brugerhandlingsbegrænsninger.
+- Evidensniveau, klientbuild og kildeproveniens.
+- Præcis fallback ved utilgængelige eller ændrede datafelter.
+
+**Kompatibilitet skal afgøres per funktion og per felt – aldrig for hele `C_TradeSkillUI`-namespace samlet.**
+
+Hvis `GetRecipeSchematic()` er utilgængelig, må dette eksempelvis ikke forhindre addonen i at anvende verificeret `GetRecipeInfo()` til learned-state og difficulty.
+
+Hvis `GetAllRecipeIDs()` mangler i den genererede API-dokumentation, skal Codex undersøge dens anvendelse i faktisk klientkode og observeret runtime. Den må ikke automatisk klassificeres som hverken garanteret understøttet eller permanent utilgængelig.
+
+Tilsvarende fremgår `IsTradeSkillLinked()` og `IsDataSourceChanging()` af Blizzards professions-UI-kode, selv om de ikke nødvendigvis optræder i den undersøgte genererede funktionsliste.
+
+### Datakildernes prioritet
+
+For karakterens aktuelle, observerbare tilstand skal prioriteten være:
+
+**1. Verificeret live klientobservation** – aktuel og kontekstkorrekt data.
+
+**2. Tidligere verificeret observation** – historisk/cachet information, eksplicit markeret som ikke længere live.
+
+**3. Kvalificeret referenceinformation** – build- og kildeafgrænsede oplysninger til planlægning og fallback.
+
+**4. UNKNOWN** – når ingen datakilde kan dokumentere et tilstrækkeligt sikkert svar.
+
+Et historisk skillniveau eller en cached learned-state må aldrig genbruges som aktuel native autoritet efter eksempelvis relog, professionsændring eller `/reload`.
+
+Hvis klienten ikke eksponerer en bestemt oplysning, må en kvalificeret reference anvendes som planlægningsgrundlag inden for sin dokumenterede gyldighed. Den må ikke udgive sig for at være live-verificeret.
+
+Datakvalitet, dataproveniens, planlægningsrettigheder og autorisation til native handlinger skal forblive adskilte.
+
+## 5. Dynamic Recipe & Material Planning
+
+Ved åbning af spillerens egen profession skal JuztLevel kunne observere den aktuelle professionsidentitet, opskrifter, learned-state, difficulty og de native reagents, som klienten faktisk eksponerer.
+
+Disse oplysninger skal derefter føres ind i det eksisterende planlægningssystem:
+
+**Current Client State → Recipe Selection → Material Requirements → Inventory → Acquisition → Current Step → Execution → Reconciliation → Replanning.**
+
+Eksempelvis skal en ændring fra gul til grøn difficulty medføre, at planlæggeren genberegner den relevante opskrifts forventede effektivitet ud fra den gældende strategimodel.
+
+Hvis en opskrift læres, skal dens learned-state genobserveres og planen genberegnes. Hvis et crafting-resultat producerer flere eller færre items end forventet, skal faktisk bekræftet output anvendes i lagerafstemningen frem for at antage et fast output.
+
+`GetRecipeSchematic()` kan levere `quantityMin`, `quantityMax`, `outputItemID` og reagent-slots, men disse skal fortolkes korrekt. Et forventet outputinterval er ikke ensbetydende med et faktisk crafting-resultat.
+
+Den eksisterende statiske recipe- og acquisition-database skal fortsat anvendes til at opdage alternative opskrifter, undersøge ulærte recipes, identificere trainers/vendors/drops og beregne fremtidige materialebehov.
+
+Dette er særligt vigtigt for leveling-ruter, der skal fungere, selv når professionsvinduet er lukket.
+
+### Leveringsusikkerhed og materialer fra andre karakterer
+
+Materialer, som forventes overført fra andre karakterer, må ikke tælles som fysisk tilgængelige, før JuztLevel har observeret dem på den aktuelle karakter.
+
+De skal kunne fremgå som `Awaiting`, med synlig leveringsusikkerhed.
+
+Addonen må ikke automatisk anbefale erstatningskøb på Auction House alene på grund af ventende levering. Den skal skelne mellem bekræftet mangel, ukendt beholdning og forventede materialer samt genberegne planen, når beholdningen faktisk ændres.
+
+## 6. Native Crafting og Blizzard-sikkerhed
+
+Jeg ønsker, at JuztLevel anvender native crafting, hvor det er teknisk kompatibelt og tilladt af klientens sikkerhedsmodel.
+
+Dette omfatter relevante anvendelser af `C_TradeSkillUI.CraftRecipe()` og `C_TradeSkillUI.CraftEnchant()`.
+
+Det er dog vigtigt, at Codex ikke antager, at en funktion er frit tilgængelig, blot fordi den eksisterer.
+
+Den genererede API-dokumentation angiver blandt andet `SecretArguments = "AllowedWhenUntainted"` på relevante funktioner. Dette skal indgå i de konkrete sikkerhedsvurderinger.
+
+Eksistensen af et API-kald eller et vellykket `pcall()` er ikke i sig selv bevis for autorisation til crafting.
+
+JuztLevel skal bevare eksplicit brugerhandling, korrekt UI-kontekst, eksisterende native execution gates og respekt for Blizzards secure/taint-begrænsninger.
+
+Ingen automatisk beskyttet crafting, skjulte klik, automatisk accept af enchant-confirmations eller fortsættelse af crafting-køer uden dokumenteret tilladt brugerhandling.
+
+## 7. Eventidentitet, korrelation og idempotent afstemning
+
+Jeg ønsker også at forbedre sammenhængen mellem client-side events, crafting-resultater, materialetransaktioner og faktisk skillprogression.
+
+Det eksisterende `TransactionLedger`, `CraftEventCorrelation`, `CraftObservationJournal70450` og `CraftOutputReconciliation` indeholder allerede dele af dette arbejde og skal bevares som udgangspunkt.
+
+### Eventbaseret evidens
+
+Relevante events omfatter blandt andet:
+
+`TRADE_SKILL_CRAFT_BEGIN`, `TRADE_SKILL_ITEM_CRAFTED_RESULT`, `UNIT_SPELLCAST_SUCCEEDED`, `TRADE_SKILL_LIST_UPDATE`, `TRADE_SKILL_DATA_SOURCE_CHANGING`, `TRADE_SKILL_DATA_SOURCE_CHANGED`, `SKILL_LINES_CHANGED` og `BAG_UPDATE_DELAYED`.
+
+De skal korreleres med profession, karakter, session, aktiv execution-intention, recipe og tilgængelige native identiteter.
+
+`CraftingItemResultData` dokumenterer blandt andet `operationID`, `itemGUID`, `itemID`, `quantity` og `isEnchant`.
+
+Den dokumenterede struktur garanterer derimod ikke et særskilt `recipeID` eller `castGUID` i samme payload. Sådanne identiteter må derfor ikke opfindes eller behandles som altid tilgængelige. De skal om nødvendigt korreleres med separat og uafhængigt observeret execution- og spellcast-evidens.
+
+### Append-only observations og idempotens
+
+Jeg ønsker en hændelsesmodel, hvor observationer bevares sekventielt per `ExecutionIntentID`, eksempelvis med:
+
+`SessionID`, `EventSequence`, `ExecutionIntentID`, `RecipeID`, `OperationID`, `ItemGUID`, `ItemID`, `Quantity`, `Timestamp`, `EventSource` og `ReconciliationStatus`.
+
+OperationID må ikke være den eneste lageringsnøgle. Der kan forekomme flere legitime outputrecords fra samme operation, ligesom samme operation-ID ikke uden videre kan antages at være globalt unik på tværs af klientsessioner.
+
+En sekventiel observationstabel med dedikerede indeks til opslag og deduplikering er derfor at foretrække frem for at overskrive resultater med `storage[operationID] = result`.
+
+Dog må eksisterende `seen`-maps og evidensindeks ikke fjernes ukritisk, hvis de allerede anvendes korrekt til idempotens.
+
+### Frame, tid og bagafstemning
+
+Frame-identitet, tidsstempler og stigende sekvensnumre skal anvendes som støtte til korrelation.
+
+To identiske events i samme frame er ikke automatisk bevis for hverken to crafts eller én dublet.
+
+`BAG_UPDATE_DELAYED` skal anvendes som en supplerende, uafhængig observation. Faktiske bagændringer kan eksempelvis kontrolleres med `C_Container.GetContainerItemInfo()` og dokumenterede item-count-API'er.
+
+`C_Container.GetContainerItemCount()` må ikke antages at eksistere uden særskilt verifikation.
+
+Bagændringer er heller ikke et universelt transaktionsbevis, da andre inventarhandlinger kan ske samtidigt, og visse professionshandlinger ikke producerer en almindelig stigning i bagbeholdningen.
+
+Hvis to ens crafting-events observeres, men der kun findes evidens for ét faktisk resultat, skal den ekstra observation behandles som en potentiel dublet og afstemmes ud fra den samlede evidens.
+
+Den må ikke automatisk undertrykkes alene på grund af en bagdifference.
+
+### Afstemningsstatus
+
+Resultater skal kunne klassificeres som eksempelvis `OBSERVED`, `CORRELATED`, `PENDING_RECONCILIATION`, `CONFIRMED`, `DUPLICATE`, `CONFLICT` eller `UNATTRIBUTED`.
+
+Kun kvalificeret, transaktionsrelevant evidens må opdatere bekræftede crafting-antal og progression.
+
+Ved `/reload`, afbrudt crafting, gentagne events eller manglende serverrespons skal JuztLevel bevare transaktionshistorikken, undgå dobbelt afregning og kræve ny evidens, før en usikker transaktion markeres som gennemført.
+
+Der må aldrig opfindes et gennemført craft eller skill-up for at få planlæggeren videre.
+
+## 8. Konkrete observationspunkter i v0.34.236
+
+Den vedhæftede version har allerede en omfattende arkitektur og flere sikkerhedsmekanismer, der bør genbruges.
+
+Jeg ønsker særligt, at Codex gennemgår følgende eksisterende sammenhænge:
+
+`ProfessionAPI.lua` indeholder allerede live-kontekstkontrol, recipe-identifikation og native reagent snapshots. Undersøg, om disse observationer anvendes konsekvent af alle relevante planlægnings- og materialefunktioner, eller om nogle fortsat anvender historiske værdier, når valide live-værdier er tilgængelige.
+
+`ProfessionNativeCapabilityMatrix.lua` kontrollerer allerede bestemte native funktioner, men skal vurderes i forhold til en mere detaljeret funktions- og feltspecifik compatibility matrix.
+
+`ClientRecipeEvidence.lua` anvender allerede recipe-listen og `GetRecipeSchematic()`. Undersøg, om de eksisterende kontroller håndterer alle dokumenterede reagent-slottyper og understøttede client-varianter uden unødigt at blokere andre valide datafelter.
+
+`CraftEventCorrelation.lua` og `CraftOutputReconciliation.lua` skal sammenholdes med den faktisk dokumenterede struktur for `CraftingItemResultData`. Undersøg særligt håndteringen af resultater uden eksplicit recipeID, hvor der findes anden uafhængig evidens. Eksisterende identitetskrav må ikke blot fjernes for at få flere events accepteret.
+
+`Inventory.lua`, `TransactionLedger.lua` og `TransactionRecovery.lua` skal kontrolleres for korrekt integration mellem native observation, bagændringer, transaktionshistorik og genoptagelse efter afbrydelser.
+
+Formålet er at identificere konkrete datatab, unødvendige fallback-forløb, duplikeret logik og ufuldstændige integrationer – ikke at erstatte fungerende sikkerhedskontrakter med svagere implementeringer.
+
+## 9. Krav til udviklingsmetode og verifikation
+
+Jeg ønsker en kontrolleret, evidensbaseret forbedring af den eksisterende kodebase.
+
+Inden større ændringer gennemføres, skal Codex kortlægge de faktiske API-kald og dataforbrugere, sammenholde dem med Forever-kildekoden og udarbejde en funktions- og feltspecifik kompatibilitetsmatrix.
+
+Derefter skal de relevante native observationer standardiseres, så planlægning, materialeberegning, crafting og reconciliation ikke hver især fortolker API-resultater forskelligt.
+
+Alle ændringer skal have konkrete regressionstests, herunder positive og negative scenarier for linked professions, skiftende data sources, manglende API-felter, alternative reagents, korrekt learned-state, gentagne events, multiple output-items, fejlede crafts, `/reload` og ændret inventory.
+
+Den samlede integration skal verificeres gennem Current Step → Material Requirements → Inventory/Bank/AH → JuztTravel/JuztTom → brugerautoriseret crafting → ledger settlement → automatic replanning.
+
+De eksisterende strategier, Combine-funktioner, professionsmål, aktive professionskontrol og Stop/Pause/Resume-regler skal respekteres.
+
+Offline simulations- og mocktests skal rapporteres adskilt fra faktiske in-game klientobservationer. En bestået mocktest er ikke tilstrækkelig til at erklære et API eller en beskyttet crafting-handling verificeret i Forever.
+
+Hver ændring skal dokumentere den konkrete fejl eller begrænsning, den anvendte løsning, hvorfor løsningen er bedre, hvilke eksisterende funktioner den påvirker, og hvordan korrekt adfærd er testet.
+
+Der må ikke introduceres nye funktionelle antagelser, der fremstilles som dokumenterede klientfakta.
+
+## Forventet resultat
+
+Jeg ønsker ikke blot flere API-kald i den eksisterende kode.
+
+Jeg ønsker, at JuztLevel – Professions får en samlet arkitektur, hvor **native client-side API'er er førstevalg for aktuel karaktertilstand, kvalificerede databaser håndterer fremtidig planlægning og oplysninger uden native dækning, og en central reconciliation-mekanisme sikrer korrekt fremdrift**.
+
+Dette skal forbedre datanøjagtighed, leveling-planlægning, materialeberegning, crafting-kontrol, kompatibilitet og vedligeholdelse.
+
+Målet er at reducere afhængigheden af statiske antagelser mest muligt, samtidig med at addonen fortsat kan levere sammenhængende 1–300-planlægning og fungere uden et åbent professionsvindue.
+
+**Det ønskede slutresultat er en mere intelligent, dynamisk, klientintegreret og vedligeholdelsesvenlig JuztLevel – Professions-addon, uden at kompromittere sikkerhed, eksisterende funktionalitet eller datakvalitet.**
