@@ -1,4 +1,0 @@
-GamepadSharedUtility = {};
-GamepadMode = {};
-
-GamepadSharedUtility.BindingStack = {};
