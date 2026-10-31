@@ -1,0 +1,58 @@
+JUZTLEVEL – PROFESSIONS
+PROPRIETARY LICENSE — ALL RIGHTS RESERVED
+
+Copyright (c) 2026 Juztie
+All Rights Reserved.
+
+1. SCOPE AND OWNERSHIP
+This notice applies to original JuztLevel – Professions program code,
+documentation, artwork, interface designs, data structures, and other original
+materials to the extent they are lawfully owned or controlled by Juztie.
+All rights not expressly granted in this notice are reserved.
+
+2. LIMITED PERMISSION FOR PLAYERS
+Subject to applicable World of Warcraft rules and any separate third-party
+terms, players may download, install, execute, and keep an unmodified copy of
+the distributed JuztLevel – Professions addon for personal gameplay. This
+permission does not authorize redistribution, repackaging, sale, sublicensing,
+or the publication of modified versions.
+
+3. RESTRICTIONS
+Except where applicable law or a separate rights holder's license permits,
+prior written permission from Juztie is required to copy, redistribute,
+republish, modify, adapt, sell, sublicense, or incorporate JuztLevel's
+proprietary original content into another product. No rights to the
+JuztLevel name, branding, or original assets are granted by implication.
+
+4. THIRD-PARTY MATERIAL AND EXCEPTIONS
+This notice does not claim ownership of third-party material merely because
+it is distributed with, referenced by, or technically integrated into the
+addon. Source-origin code, coordinate datasets, assets, libraries, and other
+third-party materials remain subject to any applicable separate licenses and
+rights. See THIRD_PARTY_NOTICES.md and Dev/LICENSE_PROVENANCE_MANIFEST.json.
+
+The supplied GatherLite-related permission texts (Wuild; David Stratmann)
+and the supplied GatherSkillMap-related text (CurseForge) grant specified
+reuse rights and state a claimed transfer to "Juztie (JuztLevel addon)."
+Those documents are preserved in Dev/Legal/Supplied/. Their wording is
+recorded for provenance; this JuztLevel notice does not independently prove
+legal ownership or expand what any grantor was authorized to transfer.
+Any material validly transferred to and owned by Juztie is covered by this
+notice only to that extent and subject to any surviving third-party rights.
+
+World of Warcraft, its in-client map graphics, game data, trademarks and
+other Blizzard content remain the property of their respective owners.
+JuztLevel is an independent third-party addon and is not endorsed by Blizzard.
+
+5. NO WARRANTY
+To the maximum extent permitted by applicable law, the original JuztLevel
+materials are provided "AS IS," without warranty of any kind. Nothing in
+this notice excludes liability that cannot lawfully be excluded.
+
+6. PERMISSIONS
+For redistribution, derivative-work, commercial-use, or branding permissions
+covering JuztLevel-owned materials, obtain written authorization from the
+JuztLevel project maintainer (Juztie).
+
+Effective: 2026-10-08
+This notice does not alter the terms of any third-party license.

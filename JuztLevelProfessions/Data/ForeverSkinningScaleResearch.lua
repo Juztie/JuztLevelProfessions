@@ -1,0 +1,46 @@
+local _,JLP=...
+-- Alpha169 public Forever item-page identities and source-qualified historical MOB RESEARCH.
+-- A WoWhead item-page Skinned-from count or a tab row does NOT prove current build-70009 client output.
+-- This data has NO x/y, mobIDs, verified mob-output pairs, routes or geometry.
+JLP.data.skinningScaleResearch={
+ contract="jlp-skinning-scales-source-research-v1",capturedAt="2026-10-09",
+ buildQualifier="FOREVER_PUBLIC_PAGES_NOT_LIVE_BUILD_70009",
+ sourceRowsVerified=false,hasVerifiedMobOutputPairs=false,hasGeometry=false,nativeDispatchAllowed=false,
+ materials={
+  {itemID=8165,name="Worn Dragonscale",category="SCALE",sourceURL="https://www.wowhead.com/forever/item=8165/worn-dragonscale#skinned-from",tabRequested="SKINNED_FROM",evidence="ITEM_PAGE_IDENTITY_ONLY",
+   scope="ITEM_IDENTITY",alternativeSource="UNKNOWN",mobGroupResearch="ALL_DRAGONKIN_HISTORICAL",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=15408,name="Heavy Scorpid Scale",category="SCALE",sourceURL="https://www.wowhead.com/forever/item=15408/heavy-scorpid-scale#skinned-from",tabRequested="SKINNED_FROM",evidence="ITEM_PAGE_IDENTITY_ONLY",
+   scope="ITEM_IDENTITY",alternativeSource="UNKNOWN",mobGroupResearch="SCORPIDS_HISTORICAL",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=15412,name="Green Dragonscale",category="SCALE",sourceURL="https://www.wowhead.com/forever/item=15412/green-dragonscale#skinned-from",tabRequested="SKINNED_FROM",evidence="ITEM_PAGE_IDENTITY_ONLY",
+   scope="ITEM_IDENTITY",alternativeSource="UNKNOWN",mobGroupResearch="GREEN_DRAGONKIN_HISTORICAL",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=15415,name="Blue Dragonscale",category="SCALE",sourceURL="https://www.wowhead.com/forever/item=15415/blue-dragonscale#skinned-from",tabRequested="SKINNED_FROM",evidence="ITEM_PAGE_IDENTITY_ONLY",
+   scope="ITEM_IDENTITY",alternativeSource="UNKNOWN",mobGroupResearch="BLUE_DRAGONKIN_HISTORICAL",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=15416,name="Black Dragonscale",category="SCALE",sourceURL="https://www.wowhead.com/forever/item=15416/black-dragonscale#skinned-from",tabRequested="SKINNED_FROM",evidence="ITEM_PAGE_IDENTITY_ONLY",
+   scope="ITEM_IDENTITY",alternativeSource="UNKNOWN",mobGroupResearch="BLACK_DRAGONKIN_HISTORICAL",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=15414,name="Red Dragonscale",category="SCALE",sourceURL="https://www.wowhead.com/forever/item=15414/red-dragonscale#skinned-from",tabRequested="SKINNED_FROM",evidence="ITEM_PAGE_IDENTITY_ONLY",
+   scope="ITEM_IDENTITY",alternativeSource="UNKNOWN",mobGroupResearch="RED_DRAGONKIN_HISTORICAL",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=7286,name="Black Whelp Scale",category="SCALE",sourceURL="https://www.wowhead.com/forever/item=7286/black-whelp-scale#skinned-from",tabRequested="SKINNED_FROM",evidence="ITEM_PAGE_IDENTITY_ONLY",
+   scope="ITEM_IDENTITY",alternativeSource="UNKNOWN",mobGroupResearch="BLACK_WHELPS_HISTORICAL",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=8154,name="Scorpid Scale",category="SCALE",sourceURL="https://www.wowhead.com/forever/item=8154/scorpid-scale#skinned-from",tabRequested="SKINNED_FROM",evidence="ITEM_PAGE_IDENTITY_ONLY",
+   scope="ITEM_IDENTITY",alternativeSource="UNKNOWN",mobGroupResearch="SCORPIDS_HISTORICAL",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=6470,name="Deviate Scale",category="SCALE",sourceURL="https://www.wowhead.com/forever/item=6470/deviate-scale#skinned-from",tabRequested="SKINNED_FROM",evidence="ITEM_PAGE_IDENTITY_ONLY",
+   scope="ITEM_IDENTITY",alternativeSource="FISHING_ALTERNATIVE_DOCUMENTED",mobGroupResearch="DEVIATES_HISTORICAL",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=6471,name="Perfect Deviate Scale",category="SCALE",sourceURL="https://www.wowhead.com/forever/item=6471/perfect-deviate-scale#skinned-from",tabRequested="SKINNED_FROM",evidence="ITEM_PAGE_IDENTITY_ONLY",
+   scope="ITEM_IDENTITY",alternativeSource="UNKNOWN",mobGroupResearch="DEVIATES_HISTORICAL",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=219517,name="Moondragon Scale",category="SCALE",sourceURL="https://www.wowhead.com/forever/item=219517/moondragon-scale#skinned-from",tabRequested="SKINNED_FROM",evidence="ITEM_PAGE_IDENTITY_ONLY",
+   scope="RESTRICTED_EPHEMERAL",alternativeSource="UNKNOWN",mobGroupResearch="FOREVER_INCUSION_RESEARCH",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+ },
+ leads={
+  {itemID=8165,mapID=1418,zone="Badlands",mobLabel="Dragon whelps (community account)",sourceType="FOREVER_ITEM_COMMUNITY_COMMENT",sourceURL="https://www.wowhead.com/forever/item=8165/worn-dragonscale",evidence="HISTORICAL_RESEARCH_ONLY",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=15408,zone="Lower Blackrock Spire",mobLabel="Spire Scorpids",sourceType="CLASSIC_GUIDE_HISTORICAL",sourceURL="https://www.wowhead.com/classic/guide/classic-leather-farming-specialty-scales",evidence="HISTORICAL_RESEARCH_ONLY",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=15412,mapID=1435,zone="Swamp of Sorrows",mobLabel="Green dragonkin near Sunken Temple",sourceType="CLASSIC_EDITORIAL_HISTORICAL",sourceURL="https://www.wowhead.com/classic/guide/classic-leather-farming-specialty-scales",evidence="HISTORICAL_RESEARCH_ONLY",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=15415,mapID=1452,zone="Winterspring",mobLabel="Blue dragonkin",sourceType="CLASSIC_EDITORIAL_HISTORICAL",sourceURL="https://www.wowhead.com/classic/guide/classic-leather-farming-specialty-scales",evidence="HISTORICAL_RESEARCH_ONLY",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true,levelMin=57,levelMax=60},
+  {itemID=15416,mapID=1428,zone="Burning Steppes",mobLabel="Black Wyrmkin / Black Dragonspawn",sourceType="CLASSIC_EDITORIAL_HISTORICAL",sourceURL="https://www.wowhead.com/classic/guide/classic-leather-farming-specialty-scales",evidence="HISTORICAL_RESEARCH_ONLY",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true,levelMin=50,levelMax=62},
+  {itemID=15414,mapID=1437,zone="Wetlands",mobLabel="Red Wyrmkin",sourceType="CLASSIC_EDITORIAL_HISTORICAL",sourceURL="https://www.wowhead.com/classic/guide/classic-leather-farming-specialty-scales",evidence="HISTORICAL_RESEARCH_ONLY",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true,levelMin=57,levelMax=62},
+  {itemID=7286,mapID=1433,zone="Redridge Mountains",mobLabel="Black whelps",sourceType="FOREVER_ITEM_COMMUNITY_COMMENT",sourceURL="https://www.wowhead.com/forever/item=7286/black-whelp-scale",evidence="HISTORICAL_RESEARCH_ONLY",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=8154,mapID=1446,zone="Tanaris",mobLabel="Scorpid Hunters",sourceType="FOREVER_ITEM_COMMUNITY_COMMENT",sourceURL="https://www.wowhead.com/forever/item=8154/scorpid-scale",evidence="HISTORICAL_RESEARCH_ONLY",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=6470,mapID=1413,zone="The Barrens",mobLabel="Deviate creatures (historical)",sourceType="CLASSIC_COMMUNITY_HISTORICAL",sourceURL="https://www.wowhead.com/forever/item=6470/deviate-scale",evidence="HISTORICAL_RESEARCH_ONLY",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=6471,zone="Wailing Caverns",mobLabel="Deviate creatures",sourceType="FOREVER_ITEM_TAB_RESEARCH_ONLY",sourceURL="https://www.wowhead.com/forever/item=6471/perfect-deviate-scale",evidence="HISTORICAL_RESEARCH_ONLY",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true},
+  {itemID=219517,mapID=1444,zone="Feralas",mobLabel="Frenzied Whelp / Wyrmkin Berserker",sourceType="FOREVER_ITEM_PAGE_RELATED_ROWS_UNRESOLVED_TAB",sourceURL="https://www.wowhead.com/forever/item=219517/moondragon-scale",evidence="HISTORICAL_RESEARCH_ONLY",mobOutputVerified=false,geometryVerified=false,notLiveSpawn=true,levelMin=51,levelMax=51},
+ },
+}

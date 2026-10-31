@@ -1,0 +1,437 @@
+local GameRules =
+{
+	Name = "GameRules",
+	Type = "System",
+	Namespace = "C_GameRules",
+	Environment = "All",
+
+	Functions =
+	{
+		{
+			Name = "AccountHasSDEnabled",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "isSDEnabled", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "AutoConnectToGameModeRealm",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+
+			Arguments =
+			{
+				{ Name = "gameModeRecordID", Type = "number", Nilable = false },
+			},
+		},
+		{
+			Name = "DoesGameModeHavePromo",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+
+			Arguments =
+			{
+				{ Name = "gameModeRecordID", Type = "number", Nilable = false },
+			},
+
+			Returns =
+			{
+				{ Name = "hasPromo", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "GetActiveGameMode",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "gameMode", Type = "GameMode", Nilable = false },
+			},
+		},
+		{
+			Name = "GetCurrentEventRealmQueues",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "eventRealmQueues", Type = "EventRealmQueues", Nilable = false },
+			},
+		},
+		{
+			Name = "GetCurrentGameModeDisplayInfo",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "info", Type = "GameModeDisplayInfo", Nilable = true },
+			},
+		},
+		{
+			Name = "GetCurrentGameModeRecordID",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "gameModeRecordID", Type = "number", Nilable = false },
+			},
+		},
+		{
+			Name = "GetDisplayedGameModeRecordIDAtIndex",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+
+			Arguments =
+			{
+				{ Name = "displayIndex", Type = "luaIndex", Nilable = false },
+			},
+
+			Returns =
+			{
+				{ Name = "gameModeRecordID", Type = "number", Nilable = false },
+			},
+		},
+		{
+			Name = "GetForeverExperiencePreset",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "preset", Type = "ForeverExperiencePreset", Nilable = true },
+			},
+		},
+		{
+			Name = "GetGameModeDisplayInfoByRecordID",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+
+			Arguments =
+			{
+				{ Name = "gameModeRecordID", Type = "number", Nilable = false },
+			},
+
+			Returns =
+			{
+				{ Name = "info", Type = "GameModeDisplayInfo", Nilable = true },
+			},
+		},
+		{
+			Name = "GetGameModeGlueScreenName",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "screenName", Type = "cstring", Nilable = false },
+			},
+		},
+		{
+			Name = "GetGameModePromoGlobalString",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+
+			Arguments =
+			{
+				{ Name = "gameModeRecordID", Type = "number", Nilable = false },
+			},
+
+			Returns =
+			{
+				{ Name = "promoGlobalString", Type = "cstring", Nilable = false },
+			},
+		},
+		{
+			Name = "GetGameRuleAsFloat",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+			Documentation = { "Returns the numeric value specified in the Game Rule, multiplied by 0.1 for every decimal place requested" },
+
+			Arguments =
+			{
+				{ Name = "gameRule", Type = "GameRule", Nilable = false },
+				{ Name = "decimalPlaces", Type = "number", Nilable = false, Default = 0 },
+			},
+
+			Returns =
+			{
+				{ Name = "value", Type = "number", Nilable = false },
+			},
+		},
+		{
+			Name = "GetGameRuleAsFrameStrata",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+			Documentation = { "Returns the value specified in the Game Rule converted to a frame strata" },
+
+			Arguments =
+			{
+				{ Name = "gameRule", Type = "GameRule", Nilable = false },
+			},
+
+			Returns =
+			{
+				{ Name = "frameStrata", Type = "cstring", Nilable = false },
+			},
+		},
+		{
+			Name = "GetNumDisplayedGameModes",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "numDisplayedGameModes", Type = "number", Nilable = false },
+			},
+		},
+		{
+			Name = "IsCharacterlessLoginActive",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "active", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "IsClassAllowedForGameMode",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+
+			Arguments =
+			{
+				{ Name = "classID", Type = "number", Nilable = false },
+			},
+
+			Returns =
+			{
+				{ Name = "valid", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "IsGameModeEnabled",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+
+			Arguments =
+			{
+				{ Name = "gameModeRecordID", Type = "number", Nilable = false },
+			},
+
+			Returns =
+			{
+				{ Name = "enabled", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "IsGameRuleActive",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+
+			Arguments =
+			{
+				{ Name = "gameRule", Type = "GameRule", Nilable = false },
+			},
+
+			Returns =
+			{
+				{ Name = "isActive", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "IsHardcoreActive",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "active", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "IsMultiActionBarVisibilityForced",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "valid", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "IsPersonalResourceDisplayEnabled",
+			Type = "Function",
+			Documentation = { "Checks the game rule as well as nameplateShowSelf" },
+
+			Returns =
+			{
+				{ Name = "isPersonalResourceDisplayEnabled", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "IsPlunderstorm",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "active", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "IsSDHDToggleEnabled",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "isEnabled", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "IsSelfFoundAllowed",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "active", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "IsStandard",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "active", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "IsWoWHack",
+			Type = "Function",
+
+			Returns =
+			{
+				{ Name = "active", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "SetForeverExperiencePreset",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+
+			Arguments =
+			{
+				{ Name = "preset", Type = "ForeverExperiencePreset", Nilable = false },
+			},
+		},
+		{
+			Name = "SetSDHDToggleValue",
+			Type = "Function",
+			SecretArguments = "AllowedWhenUntainted",
+
+			Arguments =
+			{
+				{ Name = "setToSD", Type = "bool", Nilable = false },
+				{ Name = "usageLocation", Type = "SdToggleUsageLocationUI", Nilable = false },
+			},
+		},
+	},
+
+	Events =
+	{
+		{
+			Name = "ActiveGameModeUpdated",
+			Type = "Event",
+			LiteralName = "ACTIVE_GAME_MODE_UPDATED",
+			SynchronousEvent = true,
+			Payload =
+			{
+				{ Name = "gameMode", Type = "GameMode", Nilable = false },
+			},
+		},
+		{
+			Name = "AvailableGameModesUpdated",
+			Type = "Event",
+			LiteralName = "AVAILABLE_GAME_MODES_UPDATED",
+			SynchronousEvent = true,
+		},
+		{
+			Name = "EventRealmQueuesUpdated",
+			Type = "Event",
+			LiteralName = "EVENT_REALM_QUEUES_UPDATED",
+			SynchronousEvent = true,
+			Payload =
+			{
+				{ Name = "eventRealmQueues", Type = "EventRealmQueues", Nilable = false },
+			},
+		},
+		{
+			Name = "GameModeDisplayInfoUpdated",
+			Type = "Event",
+			LiteralName = "GAME_MODE_DISPLAY_INFO_UPDATED",
+			SynchronousEvent = true,
+		},
+		{
+			Name = "GameModeDisplayModeToggleDisabled",
+			Type = "Event",
+			LiteralName = "GAME_MODE_DISPLAY_MODE_TOGGLE_DISABLED",
+			SynchronousEvent = true,
+			Payload =
+			{
+				{ Name = "gameModeRecordID", Type = "number", Nilable = false },
+				{ Name = "disabled", Type = "bool", Nilable = false },
+			},
+		},
+		{
+			Name = "GameRulesChanged",
+			Type = "Event",
+			LiteralName = "GAME_RULES_CHANGED",
+			SynchronousEvent = true,
+		},
+	},
+
+	Tables =
+	{
+		{
+			Name = "ForeverExperiencePreset",
+			Type = "Enumeration",
+			NumValues = 2,
+			MinValue = 0,
+			MaxValue = 1,
+			Fields =
+			{
+				{ Name = "Classic", Type = "ForeverExperiencePreset", EnumValue = 0 },
+				{ Name = "Modern", Type = "ForeverExperiencePreset", EnumValue = 1 },
+			},
+		},
+		{
+			Name = "SdToggleUsageLocationUI",
+			Type = "Enumeration",
+			NumValues = 4,
+			MinValue = 0,
+			MaxValue = 3,
+			Fields =
+			{
+				{ Name = "BeforeLogin", Type = "SdToggleUsageLocationUI", EnumValue = 0 },
+				{ Name = "CharacterCreation", Type = "SdToggleUsageLocationUI", EnumValue = 1 },
+				{ Name = "BarberShop", Type = "SdToggleUsageLocationUI", EnumValue = 2 },
+				{ Name = "OptionsMenu", Type = "SdToggleUsageLocationUI", EnumValue = 3 },
+			},
+		},
+		{
+			Name = "GameModeDisplayInfo",
+			Type = "Structure",
+			Fields =
+			{
+				{ Name = "logo", Type = "fileID", Nilable = false },
+				{ Name = "logoHeight", Type = "number", Nilable = false },
+				{ Name = "logoVerticalOffset", Type = "number", Nilable = false },
+				{ Name = "logoShrunkenHeight", Type = "number", Nilable = false },
+				{ Name = "logoUsesDarkBackdrop", Type = "bool", Nilable = false },
+				{ Name = "characterCreateExtraHeight", Type = "number", Nilable = false },
+				{ Name = "characterCreateOuterBorder", Type = "fileID", Nilable = false },
+			},
+		},
+	},
+
+	Predicates =
+	{
+	},
+};
+
+APIDocumentation:AddDocumentationTable(GameRules);

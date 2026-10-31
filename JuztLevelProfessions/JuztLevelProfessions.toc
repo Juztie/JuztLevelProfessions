@@ -1,0 +1,457 @@
+## Interface: 16000, 16001
+## Title: JuztLevel - Professions
+## Notes: Multi-profession Forever planner with guarded native production execution, all-profession workflow registration and staged research, build-qualified evidence, and persistent Auction House/bank planning data.
+## Author: Daniel / OpenAI
+## Version: 0.34.236-p0-first-aid-continuity-owner-travel-tests
+## X-M37-Flight-Cache: Native taxi CURRENT/REACHABLE positive observations persisted per character GUID; build/faction/locale scoped; no false unlock inference; user still boards manually
+## X-M36-Flight-Routing: Unknown flight unlocks remain available only as conditional fallbacks; confirmed taxi access preferred; non-flight routes prioritized; no unlock inference
+## X-M17-Canonical-Travel: Excel 70450; 47 nodes, 162 routes; all registered links route-considered regardless of verification label; actual access rules checked; no native travel rights
+## X-M35-Map-Transitions: Attested city/exterior map gates and qualified transport graph; advisory route stages only; client-observed map changes; no inferred terrain paths or transport boarding
+## X-M26-Transport-Audit: 35 flight masters (workbook headline says 36), 150 flight + 8 zeppelin + 4 boat; alternate map system tracked; no auto-boarding
+## X-M15-Materials-Sources: Build 70450 read-only unified recipe/reagent/inventory/acquisition; build isolation; zero native permission
+## X-M32-Fishing: Shared itemID filters, Fish.zip item-icon identity, historical grid-area annotations; no invented pool points or walkability
+## X-M29-Objective-Tracker: 70450 own read-only overlay; all 12 profession models; build and observation qualified; above/left non-overlapping dock; native tracker never mutated
+## X-M28-Economy: Build 70450 read-only per-current-step/basket receipts; bank cached vs live; AH build+scope+time+item proof; unknown != zero; no purchase/native rights
+## X-M27-Gathering-Waypoint: Explicit opt-in; two same-map client observations; route revision guarded; foreign user waypoint protected; normalized proximity is not walkability
+## X-M14-Gathering-Pathing: Source/observation/skill revision-bound routes; FROM_PLAYER overlay; geometry diagnostic; terrain unverified
+## X-License: All Rights Reserved (Juztie; see LICENSE.txt)
+## SavedVariables: JuztLevelProfessionsDB, JuztLevelProfessionsDBBackup, JuztLevelP0LiveAuditDB
+## X-Game-Type: Forever
+## X-Forever-Version: 1.60.1
+## X-Forever-Reference-Build: 70450
+## X-Forever-Build-Scope: 70450/70374 are dataset provenance, not required client builds; runtime API and action safety decide capabilities
+## X-Alchemy-Candidate-Build: 70245
+## X-Requalification-Build: 70245
+## X-Requalification-Build-Scope: historical-alchemy-candidate-only
+## X-M2-Catalogue-Target-Build: 70374
+## X-M3-Economy-Reference-Build: 70374
+## X-M4-Data-Communication-Build: 70374 (historical) + 70450 (current read-only)
+## X-M5-Craft-History-Tracker-Build: 70374 (historical) + 70450 (current passive evidence)
+## X-M25-Travel-Continuity: Reload-auto-resume of canonical source intent; live-origin replanning, no saved active route legs; zero auto-boarding
+## X-M30-Enchant-One: Synchronous REPLACE_ENCHANT only; same-click protected/taint gate; no deferred popup action; client result required; manual fallback
+## X-M24-Craft-Batch-Native-Safety: Single guarded ordinal; explicit user click; independent ledger/recovery and source review required; no automated continuation
+## X-M23-Craft-Observation: Build70450 castGUID + exact output item event; operationID/itemGUID replay guard; no synthetic crafts
+## X-M23-History: Exact cast proof de-duplication against native ledger; observed quantity is NOT confirmed craft count
+## X-M6-Recipe-Reference-Build: 70450
+## X-M34-Recipe-Field-Bundle: 70450 read-only correlated source evidence, no speculative yields/skill bands/vendor/spawn authority
+## X-M7-Craft-Output-Yield-Build: 70450
+## X-M7-Scope: Read-only source effect/yield reference and explicit live UI snapshot; zero native craft authority
+## X-M7-Yield-Verification: 70450 DB2 effect bases are NOT server-certified item yields; external unpinned conflicts exposed; variable ranges require linked live TradeSkill UI or executed craft evidence
+## X-M8-Skill-Difficulty-Build: 70450
+## X-M8-Scope: Canonical build-70450 read-only yellow/grey source cutoffs; orange/green unknown; optional single-rank live UI color observation; no production authority
+## X-M9-Item-Metadata-Build: 70450
+## X-M9-Audit: 4919 item-ID records; 582 UNKNOWN names; 2 missing Item rows; 12947 reference relations; role-mask parity checked; no source promotion
+## X-M9-Scope: 4919 item-ID reference records; 582 source-unknown names; 12947 relation rows; NPC acquisition unverified
+## X-M21-Recipe-Sources: Teaching-item link exact for build 70450; vendor/trainer/drop server authority UNKNOWN without in-client UI observation
+## X-M21-NPC-Coordinates: Non-Forever historical coordinates remain diagnostic only; current-client player coordinates are NOT NPC spawn coordinates
+## X-M21-Permission: No vendor purchases, auto-navigation, crafting, persistent source promotion or drop-rate claims
+## X-M9-Link-Evidence: Current observed client build and GetItemInfo hyperlink ItemID; source remains 70450, no synthetic clickable links or source promotion
+## X-M13-Common-Navigation: Single qualified navigation request path; map waypoint preservation; independent handoff; no native crafting rights
+## X-M12-Navigation-Map-QA: Read-only route/map/travel diagnostics; false-return API handling and finite zoom/pan; no native execution permissions
+## X-M11-Catalogue-Qualification: Strict field-by-field 70374 provenance/rights admission; no new production permissions
+## X-M6-Recipe-Authority: READ_ONLY_UNVERIFIED_ACCESS
+## X-M18-Recipe-Catalogue: 70450 / 2664 profession-spell identities / 2541 candidates; taxonomy verified against client CSV, live access UNVERIFIED
+## X-Current-Communication-Authority: READ_ONLY_NO_NATIVE_DISPATCH
+## X-M22-Source-Qualification: 70450 strict per-recipe/per-field provenance + redistribution review; zero pre-approved rows
+## X-M22-Production-Scope: SOURCE_QUALIFIED data receipts NEVER enable native dispatch; all original native safety gates retained
+## X-Legacy-Production-Baseline: 70009
+## X-Legacy-Requalification-Build: 70245
+
+Bootstrap.lua
+Core/Constants.lua
+Core/ClientBuildInfo.lua
+Core/RuntimeCompatibility.lua
+Core/BuildPreflightPresentation.lua
+Core/MainViewportLayout.lua
+Core/ProfessionRegistry.lua
+Core/ProfessionMaturityPresentation.lua
+Core/ProfessionNativeCapabilityMatrix.lua
+Core/ProfessionDatasetProvider.lua
+Core/PlanAuthorityPolicy.lua
+Core/ProfessionRuntimeState.lua
+Core/Text.lua
+Core/EventBus.lua
+Core/CharacterIdentity.lua
+Core/DB.lua
+Core/KnowledgeCache.lua
+Core/PerformanceAudit70450.lua
+Core/Inventory.lua
+Core/ProfessionAPI.lua
+Core/ProfessionWorkspace.lua
+Core/SecondaryWorkspace.lua
+Data/ForeverHerbalismProgression209.lua
+Data/ForeverMiningNodeProgression210.lua
+Data/GatheringSourceManifest.lua
+Data/GatheringReferencePacked.lua
+Core/GatheringDataRegistry.lua
+Core/NodeSkillEvaluator.lua
+Core/GatheringSharedMapState.lua
+Core/GatheringReferenceIdentity.lua
+Core/GatheringObservationStore.lua
+Core/GatheringObservationSensor.lua
+Core/GatheringMapLayerController.lua
+Core/GatheringViewLayerPolicy.lua
+Data/ForeverFishingCatchAreas.lua
+Data/ForeverSkinningReferenceEvidence.lua
+Data/ForeverSkinningResearchLeads.lua
+Data/ForeverSkinningMobEvidence.lua
+Data/ForeverSkinningMaterialResearch.lua
+Data/ForeverSkinningHideScaleResearch.lua
+Data/ForeverSkinningScaleResearch.lua
+Data/GatheringResourceOutputEvidence.lua
+Data/GatheringResourceLocaleEvidence.lua
+Data/GatheringRestrictedResourceIdentity.lua
+Data/GatheringOutputCandidateEvidence.lua
+Core/GatheringSkinningEvidence.lua
+Core/SkinningResearchCatalog.lua
+Core/SkinningMaterialIntelligence.lua
+Core/SkinningResearchQualification.lua
+Core/SkinningMobOutputQualification.lua
+Core/GatheringSourceEvidenceSummary.lua
+Core/FishingCookingIntelligence.lua
+Core/FishingResourceCatalogue70450.lua
+Core/FishingSectorItinerary70450.lua
+Core/FishingAreaIntelligence.lua
+Core/GatheringSpatialAreaCatalog.lua
+Core/GatheringResourceIcons.lua
+Core/GatheringCustomRoute.lua
+Core/GatheringMaterialBridge.lua
+Core/GatheringOutputExplanation.lua
+Core/SkinningOutputEvidenceGate.lua
+Core/GatheringZoneSuitability.lua
+Core/ForeverHerbalismProgression209.lua
+Core/ForeverMiningNodeProgression210.lua
+Core/GatheringGuidePresentation.lua
+Core/GatheringResourceDisplayCatalog.lua
+Core/GatheringResourceBrowser.lua
+Core/GatheringSmartRoute.lua
+Core/GatheringRouteService.lua
+Core/GatheringWaypointProgress70450.lua
+Core/GatheringRouteResult.lua
+Core/GatheringPathingDiagnostics.lua
+Core/GatheringRoutePresentation.lua
+Core/GatheringRouteJourney.lua
+Core/GatheringRouteExplanation.lua
+Core/GatheringMapOverlay.lua
+Data/MapRevealData.lua
+Core/MapRevealService.lua
+Core/MapRevealRenderer.lua
+Core/GatheringMapViewService.lua
+Core/GatheringRouteViewport.lua
+Core/GatheringRefreshBudget.lua
+Core/GatheringViewportLayout.lua
+Core/GatheringClientAcceptance.lua
+Data/ForeverFishingMapIdentity.lua
+Core/FishingSkillContext.lua
+Core/ForeverFishingZoneModel.lua
+Core/ForeverFishingMapCanvas.lua
+Core/ForeverFishingZoneBrowser.lua
+Core/GatheringMapZoneClick.lua
+Core/SecondaryVolatileAdvisory.lua
+Core/SecondaryLevelingPlanner.lua
+Core/AcquisitionQuantities.lua
+Core/RecipeDifficulty.lua
+Core/TransactionLedger.lua
+Core/RecipeTelemetry.lua
+Core/NativeDispatchService.lua
+Core/CraftBatchReadiness70450.lua
+Core/CraftOutputReconciliation.lua
+Core/CraftEventCorrelation.lua
+Core/Crafting.lua
+Core/TransactionRecovery.lua
+Core/AuctionScanner.lua
+Core/AuctionScanGuard.lua
+Core/PriceResolver.lua
+Data/Catalog.lua
+Data/ProfessionSources.lua
+Data/ForeverAlchemyRankCrosscheck211.lua
+Data/ProfessionResearchRoutes.lua
+Data/RecipeOutputYields.lua
+Data/RecipeAccessSources.lua
+Data/MaterialAcquisitionSources.lua
+Data/Travel.lua
+Core/SourceResolver.lua
+Core/Navigation.lua
+Core/NavigationCapabilityEvidence.lua
+Core/TravelRouter.lua
+Core/IntegratedTravel/Contract.lua
+Core/IntegratedTravel/Network.lua
+Core/IntegratedTravel/Planner.lua
+Core/IntegratedTravel/MapTransitions.lua
+Core/IntegratedTravel/Journey.lua
+Core/IntegratedTravel/Corridor.lua
+Core/IntegratedTravel/HordeOrgrimmarUndercity.lua
+Core/IntegratedTravel/TransportResearch.lua
+Core/IntegratedTravel/ForeverPending.lua
+Core/IntegratedTravel/Research.lua
+Core/OwnerAuthorizedNavigation.lua
+Core/TransportNetworkAudit70450.lua
+Core/FlightUnlockObservation.lua
+Core/IntegratedTom/Motion.lua
+Core/IntegratedTom/Theme.lua
+Core/IntegratedTravelEngine.lua
+Core/IntegratedDestinationOwner.lua
+Core/TravelContinuity70450.lua
+Core/IntegratedNavigationActions.lua
+Core/UnifiedDestinationNavigation.lua
+Core/IntegratedNavigationHUD.lua
+Core/IntegratedTom/StandaloneCore.lua
+Core/IntegratedTom/StandaloneNavigation.lua
+Core/IntegratedTom/StandaloneBridge.lua
+Core/IntegratedTom/StandaloneTheme.lua
+Core/IntegratedTom/StandaloneUI.lua
+Core/IntegratedTom/StandaloneMotion.lua
+Core/IntegratedTom/StandaloneDisplay.lua
+Core/IntegratedTom/IntegratedBinding.lua
+Core/NavigationMapRouteAudit.lua
+Core/TrainerOptimizer.lua
+Core/ForeverRecipeAuthority.lua
+Data/ProfessionsCatalogueSchema.lua
+Data/ProfessionsCatalogueRights.lua
+Data/ProfessionsCatalogueRecords.lua
+Data/ProfessionsCatalogueResearchCandidates.lua
+Data/OwnerPrivatePilotResearch.lua
+Data/Build70374ProfessionReference.lua
+Data/Build70450RecipeRecords.lua
+Data/Build70450RecipeQA.lua
+Data/Build70450CraftOutputRecords.lua
+Data/Build70450SkillDifficultyEvidence.lua
+Data/Build70450ItemMetadataRecords.lua
+Data/Build70450AcquisitionRecords.lua
+Data/Build70450NPCSourceCrosschecks.lua
+Data/ForeverQuestAcquisition191.lua
+Data/Build70450ProductionRights.lua
+Data/Build70450ProductionRouteEvidence.lua
+Core/Build70450RecipeCatalogue.lua
+Core/Build70450RecipeQualification.lua
+Core/Build70450CraftOutput.lua
+Core/Build70450SkillDifficulty.lua
+Core/Build70450ItemMetadata.lua
+Core/Build70450RecipeAcquisition.lua
+Core/Build70450NPCSourceEvidence.lua
+Core/RecipeEvidenceBundle70450.lua
+Core/Build70450ProductionQualification.lua
+Core/Build70450ProductionRouteAudit.lua
+Core/Build70450AlchemyRouteAudit.lua
+Core/MaterialsSources70450.lua
+Core/EconomyIntegration70450.lua
+Core/EconomyCommand70450.lua
+Core/MaterialsSourcesCommand70450.lua
+Core/RecipeAcquisitionCommand70450.lua
+Core/ItemMetadataCommand70450.lua
+Core/SkillDifficultyCommand70450.lua
+Core/CraftOutputCommand70450.lua
+Core/RecipeCommand70450.lua
+Core/Build70374ProfessionReference.lua
+Core/ProfessionEconomy70374.lua
+Core/ProfessionDataBridge70374.lua
+Core/ProfessionDataBridge70450.lua
+Core/ProfessionDataCommunication.lua
+Core/CraftObservationJournal70374.lua
+Core/CraftObservationJournal70450.lua
+Core/CraftHistoryIntegration70374.lua
+Core/CraftingIntegration70374.lua
+Core/EconomyCommand70374.lua
+Core/ProfessionsCatalogueQualification.lua
+Core/RecipeReferenceCatalogue.lua
+Core/ClientRecipeEvidence.lua
+Core/ProfessionsDataCatalogue.lua
+Core/ProfessionResearch.lua
+Core/RecipeOutputEvidence.lua
+Core/RecipeAccessEvidence.lua
+Core/MaterialAcquisitionEvidence.lua
+Core/ProfessionDependencyGraph.lua
+Core/ResearchSupplementPlanner.lua
+Core/ResearchCandidateVerifier.lua
+Core/ResearchPromotionPolicy.lua
+Core/ResearchPromotionClosure.lua
+Core/ResearchRouteSegmentBridge.lua
+Core/ResearchRouteSegmentQualification.lua
+Core/ResearchRouteSegmentHandoff.lua
+Core/SourceConfidence.lua
+Core/RouteProgress.lua
+Core/SourceRoute.lua
+Data/Tailoring.lua
+Core/TailoringLevelingCoverage.lua
+Core/TailoringRecipeQualification.lua
+Core/TailoringProgressionEvidence.lua
+Data/Enchanting.lua
+Data/Alchemy.lua
+Data/Blacksmithing.lua
+Data/Engineering.lua
+Data/Leatherworking.lua
+Data/CurrentBuildEvidence.lua
+Data/PublicProfessionGuides.lua
+Data/ForeverMiningSmeltingBands.lua
+Core/MiningSmeltingProgression.lua
+Data/ForeverSecondaryLeveling.lua
+Data/ForeverSecondaryRecipeEvidence.lua
+Data/ForeverSecondaryRecipeLearning206.lua
+Data/ForeverFishingZoneEvidence.lua
+Data/PublicCraftingRouteEvidence.lua
+Data/PublicAlchemyRouteEvidence.lua
+Data/ForeverStarterCorrections.lua
+Core/ForeverStarterRoute.lua
+Core/ForeverAlchemyCandidateView.lua
+Data/ForeverRecipeAccessProof.lua
+Core/ForeverRecipeAccessBridge.lua
+Data/ForeverPrimaryRecipeParity212.lua
+Data/ForeverPrimaryRecipeParity213.lua
+Data/ForeverPrimaryRecipeParity215.lua
+Data/ForeverPrimaryRecipeParity216.lua
+Data/ForeverPrimaryRecipeParity222.lua
+Data/ForeverPrimaryRecipeParity224.lua
+Data/ForeverIntermediateOutputs.lua
+Core/MaterialCatalog.lua
+Core/EnchantingToolResolver.lua
+Data/Disenchant.lua
+Data/VendorPrices.lua
+Data/TailoringDisenchant.lua
+Core/Disenchant.lua
+Core/CostOptimizer.lua
+Core/SkillUpProbabilityPlanner.lua
+Data/ForeverRecipeMinimums192.lua
+Data/ForeverSelectedRecipeFacts193.lua
+Data/ForeverSelectedRecipeFacts194.lua
+Data/ForeverExactBSLWSourceSkills219.lua
+Data/ForeverEngineeringGuideFacts196.lua
+Data/ForeverNPCExactCrosscheck197.lua
+Data/ForeverTrainerNameReferences200.lua
+Data/ForeverExactAcquisition192.lua
+Core/ProfessionRecipeMinimumGate.lua
+Core/CrossProfessionDependencyPlanner.lua
+Core/AccountMaterialReservations.lua
+Core/UniversalRouteOptimizer.lua
+Data/ForeverAcquisitionModes190.lua
+Core/RecipeSourcePlanningBridge.lua
+Core/ProfessionPlanningFacts.lua
+Core/CurrentStepTravelBridge.lua
+Core/CurrentStepCompletionChain.lua
+Core/PrimaryCraftingRankSources211.lua
+Core/ProfessionFieldChain229.lua
+Core/ForeverSkinningEligibility230.lua
+Core/ProfessionSourceBudget230.lua
+Core/ForeverFirstAidArtisan232.lua
+Core/ForeverPrimarySourceWindows233.lua
+Core/ForeverProgressionWindows235.lua
+Core/ProfessionSourceActionChain234.lua
+Core/UniversalCurrentStep.lua
+Core/Planner.lua
+Core/ProductionRouteEnduranceAudit.lua
+Core/ProductionEnchantingRecipeIdentity.lua
+Core/ProductionEnchantingTargetedExecutionFoundation.lua
+Core/ProductionTailoringRecipeIdentity.lua
+Core/ProductionAlchemyFoundation.lua
+Core/RouteQualificationService.lua
+Core/BuildRequalificationService.lua
+Core/PublicIDReferencePolicy.lua
+Core/PublicCraftingRouteComparison.lua
+Core/ForeverSkillBandPlanner.lua
+Core/ForeverStitchedSourceRoutes226.lua
+Core/ForeverStitchedCurrentStep227.lua
+Core/ProfessionProgressionCoverage228.lua
+Core/ForeverMaterialFlow.lua
+Core/ForeverRouteAcquisition.lua
+Core/ForeverRouteGuideView.lua
+Core/ProfessionReferenceGuide.lua
+Core/OptionalNPCSnapshot.lua
+Core/CurrentBuildRequalification.lua
+Core/ProfessionObservationSnapshot.lua
+Core/RequirementPlan.lua
+Core/CraftReadiness.lua
+Core/ActionQueue.lua
+Core/ActionAssist.lua
+Core/ExecutionFlow.lua
+Core/WorkspaceOrchestrator.lua
+Core/RouteSession.lua
+Core/TravelSession.lua
+Core/TravelTransition.lua
+Core/NavigationGuidance.lua
+Core/RouteMarkerLifecycle.lua
+Core/DestinationHandoff.lua
+Core/RouteCheckpoint.lua
+Core/NextBestAction.lua
+Core/ContextAction.lua
+Core/ProgressTracker.lua
+Core/CraftPresentation.lua
+Core/ExecutionProgress.lua
+Core/ProfessionState.lua
+Core/ProfessionGuideScope.lua
+Core/GuideSteps.lua
+Core/ProductionTailoringAuthorityAdapter.lua
+Core/ProductionEnchantingAuthorityAdapter.lua
+Core/AcquisitionPlanner.lua
+Core/ResearchRecursiveMaterialAdapter.lua
+Core/ResearchAdaptivePlannerParity.lua
+Core/ResearchShadowPlanner.lua
+Core/ResearchPlannerAuthorityReadiness.lua
+Core/ResearchRouteAuthorityBridge.lua
+Core/ResearchPlannerConsumerBridge.lua
+Core/ResearchConsumerInvalidation.lua
+Core/ProductionTailoringExecutionReadiness.lua
+Core/ProductionEnchantingExecutionReadiness.lua
+Core/ResearchExecutionReadiness.lua
+Core/ResearchExecutionIntentHandoff.lua
+Core/ResearchExecutionAuthorityGate.lua
+Core/ProductionTailoringNativeExecutionAuthority.lua
+Core/ProductionEnchantingNativeExecutionAuthority.lua
+Core/ProductionEnchantingNativeSettlement.lua
+Core/EnchantOneSameClick70450.lua
+Core/ProductionEnchantingNativeRouteCoverage.lua
+Core/ProductionEnchantingCraftAllAuthority.lua
+Core/ProductionEnchantingCraftAllSession.lua
+Core/ProductionEnchantingCraftAllOrchestrator.lua
+Core/ProductionTailoringCraftAllAuthority.lua
+Core/ProductionTailoringAutoRouteAuthority.lua
+Core/ResearchNativeExecutionAuthority.lua
+Core/ResearchNativeCraftAllAuthority.lua
+Core/ResearchNativeCraftAllStrictOrchestrator.lua
+Core/ResearchNativeCraftAllInterruption.lua
+Core/ProductionTailoringCraftAllRestart.lua
+Core/ResearchNativeCraftAllSettlement.lua
+Core/ResearchNativeCraftAllHandoff.lua
+Core/ResearchNativeCraftAllRestart.lua
+Core/ResearchNativeCraftAllResolutionMatrix.lua
+Core/ResearchNativeExecutionSettlement.lua
+Core/ResearchNativeStepTransition.lua
+Core/ResearchSequentialStopPolicy.lua
+Core/ResearchAutoRouteSessionLineage.lua
+Core/ResearchAutoRouteInterruption.lua
+Core/ResearchAutoRouteOrchestrator.lua
+Core/ResearchBoundedSequentialCraft.lua
+Core/ResearchRouteChangingRestart.lua
+Core/ResearchAutoRouteRouteChangeRestart.lua
+Core/ProductionTailoringAutoRouteRestart.lua
+Core/ProductionTailoringAutoRouteEndurance.lua
+Core/ProductionTailoringAutoRouteNativeEndurance.lua
+Core/ProductionTailoringAutoRouteNativeCoverage.lua
+Core/ResearchBoundaryResolutionRestart.lua
+Core/ResearchAutoRouteRestart.lua
+Core/AcquisitionSession.lua
+Core/ProfessionRegressionMatrix.lua
+UI/Theme.lua
+UI/Widgets.lua
+UI/Layout.lua
+UI/IconResolver.lua
+UI/Interaction.lua
+UI/WindowRegistry.lua
+UI/UIPresentationAudit70450.lua
+UI/Components.lua
+UI/ContentFormat.lua
+UI/Pages/Overview.lua
+UI/SkinningMaterialsBrowser.lua
+UI/Pages/Guide.lua
+UI/GatheringResourceRow.lua
+UI/FishingResourcePicker70450.lua
+UI/Pages/Secondaries.lua
+UI/StandaloneGatheringMap.lua
+UI/Pages/AuctionHouse.lua
+UI/Pages/Bank.lua
+UI/Pages/History.lua
+UI/Pages/Settings.lua
+UI/ObjectiveStepTracker.lua
+UI/MainWindow.lua
+UI/GatheringWindowCoordinator.lua
+UI/MinimapButton.lua
+Core/P0LiveAudit.lua
+Core/Core.lua
