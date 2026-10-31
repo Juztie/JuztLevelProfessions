@@ -1,5 +1,0 @@
-## Title: Blizzard_MirrorTimer
-## Dep: Blizzard_EditMode [AllowLoadGameType mainline]
-
-[Family]\MirrorTimer.lua
-[Family]\MirrorTimer.xml

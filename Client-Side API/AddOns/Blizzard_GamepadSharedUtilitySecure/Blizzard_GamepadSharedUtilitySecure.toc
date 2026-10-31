@@ -1,6 +1,0 @@
-## Title: Blizzard_GamepadSharedUtilitySecure
-## UseSecureEnvironment: 1
-## Dep: Blizzard_SharedXML
-
-SecureBaseDialog.lua
-SecureBaseDialog.xml

@@ -1,4 +1,0 @@
-
-function SocialOverrides.CreateBlockNeighborhoodInvitesSetting(category)
-
-end
